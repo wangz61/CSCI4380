@@ -1,1 +1,113 @@
+\documentclass[11pt]{article}
+\usepackage{enumerate}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}\usepackage{mathtools}
+\usepackage{upquote,textcomp}
+
+\setlength{\parindent}{0cm}
+
+\setlength{\parskip}{0.3cm plus4mm minus3mm}
+
+\oddsidemargin = 0.2in
+\textwidth = 6.5 in
+\textheight = 9.8 in
+\headsep = -1in
+
+\lstset{frame=tb,
+  language=,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  keepspaces=true,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{black},
+  keywordstyle=\color{black},
+  commentstyle=\color{black},
+  stringstyle=\color{black},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+
+\begin{document}
+
+
+\vspace*{-0.7in}
+
+\section*{Practice Problem for Homework 1 Question 1}
+
+\textbf{(Practice Problem for Question 1)}  
+Find the first name and last name of all passengers who have ever flown on a flight that departed from an airport located in the city of \emph{Los Angeles} and arrived at an airport located in the city of \emph{New York}.  
+Cities may have multiple airports. Return each passenger only once, even if they took multiple such flights.
+
+\subsection*{Answer:}
+
+
+\paragraph{Step 1: Identify Los Angeles airports.}
+\[
+LA \;=\; \sigma_{\text{City} = 'Los\ Angeles'}(\text{Airports})
+\]
+
+\paragraph{Step 2: Identify New York airports.}
+\[
+NY \;=\; \sigma_{\text{City} = 'New\ York'}(\text{Airports})
+\]
+
+\paragraph{Step 3: Find all flights departing from Los Angeles airports.}
+\[
+FromLA \;=\; \text{Flights} \;\bowtie_{\text{DepartureAirportCode} = \text{Code}}\; LA
+\]
+
+\paragraph{Step 4: From those, keep only flights arriving at New York airports.}
+\[
+LAtoNY \;=\; FromLA \;\bowtie_{\text{ArrivalAirportCode} = \text{Code}}\; NY
+\]
+
+\paragraph{Step 5: Retrieve the passengers who flew on those flights.}
+
+We first connect flights to tickets, and then tickets to passengers:
+
+\[
+Pax \;=\; \text{Passengers} \;\bowtie\; \text{Tickets} \;\bowtie\; \text{TicketFlights} \;\bowtie_{\text{TicketFlights.FId} = LAtoNY.FId}\; LAtoNY
+\]
+
+\paragraph{Step 6: Project the required attributes and remove duplicates.}
+
+\[
+\pi_{\text{FirstName}, \text{LastName}}(Pax)
+\]
+
+\subsection*{Final Answer}
+
+\[
+\boxed{
+\begin{aligned}
+\pi_{\text{FirstName}, \text{LastName}} \Big(
+&\text{Passengers}
+\;\bowtie\;
+\text{Tickets}
+\;\bowtie\;
+\text{TicketFlights}
+\;\bowtie_{\text{TicketFlights.FId} = LAtoNY.FId} \\
+&\Big(
+(\text{Flights}
+\;\bowtie_{\text{DepartureAirportCode} = \text{Code}}\;
+\sigma_{\text{City} = 'Los\ Angeles'}(\text{Airports})) \\
+&\qquad\bowtie_{\text{ArrivalAirportCode} = \text{Code}}\;
+\sigma_{\text{City} = 'New\ York'}(\text{Airports})
+\Big)
+\Big)
+\end{aligned}
+}
+\]
+
+This expression returns the first and last names of all distinct passengers who have flown on at least one flight departing from Los Angeles and arriving in New York.
+
+
+\end{document}
 
